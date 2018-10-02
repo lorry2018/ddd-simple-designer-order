@@ -1,0 +1,58 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.screw.infrastructure.mapper.CustomerMapper">
+    <resultMap id="orderResultMap" type="com.screw.domain.order.DesignerOrder">
+        <id column="order_id" property="id" />
+        <result column="customer_id" property="customerId" />
+        <result column="designer_id" property="designerId" />
+        <result column="state" property="state" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result column="expected_amount" property="expectedAmount" />
+        <result column="actual_paid_amount" property="actualPaidAmount" />
+        <result column="estimated_days" property="estimatedDays" />
+        <result column="area" property="area" />
+        <result column="abort_cause" property="abortCause" />
+        <result column="feedback_star" property="feedbackStar" />
+        <result column="feedback_description" property="feedbackDescription" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+    <resultMap id="customerResultMap" type="com.screw.domain.customer.Customer">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="province" property="address.province" />
+        <result column="city" property="address.city" />
+        <result column="zone" property="address.zone" />
+        <result column="address" property="address.address" />
+        <result column="postCode" property="address.postCode" />
+        <result column="enabled" property="enabled"/>
+
+        <collection property="designerOrders" resultMap="orderResultMap" />
+    </resultMap>
+    <select id="selectAll" resultMap="customerResultMap">
+        SELECT customer.id,
+            customer.name,
+            customer.phone,
+            customer.province,
+            customer.city,
+            customer.zone,
+            customer.address,
+            customer.postCode,
+            customer.enabled,
+            designer_order.id as order_id,
+            designer_order.customer_id,
+            designer_order.designer_id,
+            designer_order.state,
+            designer_order.expected_amount,
+            designer_order.actual_paid_amount,
+            designer_order.estimated_days,
+            designer_order.area,
+            designer_order.abort_cause,
+            designer_order.feedback_star,
+            designer_order.feedback_description,
+            designer_order.created_time,
+            designer_order.updated_time
+        FROM customer
+        LEFT OUTER JOIN designer_order
+        ON customer.id = designer_order.customer_id
+    </select>
+</mapper>
