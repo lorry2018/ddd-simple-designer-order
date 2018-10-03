@@ -17,7 +17,7 @@ CREATE TABLE `designer` (
   `phone` varchar(45) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `level` varchar(45) DEFAULT NULL,
-  `priceByDay` float DEFAULT NULL,
+  `price_by_day` float DEFAULT NULL,
   `enabled` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );

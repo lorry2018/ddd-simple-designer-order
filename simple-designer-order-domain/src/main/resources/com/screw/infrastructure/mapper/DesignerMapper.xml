@@ -1,0 +1,67 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.screw.infrastructure.mapper.DesignerMapper">
+    <resultMap id="designerResultMap" type="com.screw.domain.designer.Designer">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="age" property="age" />
+        <result column="level" property="level" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />
+        <result column="price_by_day" property="priceByDay" />
+        <result column="enabled" property="enabled" />
+    </resultMap>
+    <sql id="selectPart">
+        SELECT
+            id,
+            name,
+            phone,
+            age,
+            level,
+            price_by_day,
+            enabled
+        FROM designer
+    </sql>
+
+    <select id="selectByKey" resultMap="designerResultMap">
+        <include refid="selectPart" />
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectOneBySpecification" resultMap="designerResultMap">
+        <include refid="selectPart" />
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND id = #{id}</if>
+        <if test="name!=null and name!=''"> AND name = #{name}</if>
+        <if test="phone!=null and phone!=''"> AND phone = #{phone}</if>
+    </select>
+
+    <select id="selectAll" resultMap="designerResultMap">
+        <include refid="selectPart" />
+    </select>
+
+    <select id="selectBySpecification" resultMap="designerResultMap">
+        <include refid="selectPart" />
+        WHERE 1=1
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND id = #{id}</if>
+        <if test="name!=null and name!=''"> AND name = #{name}</if>
+        <if test="phone!=null and phone!=''"> AND phone = #{phone}</if>
+    </select>
+
+    <insert id="create">
+        INSERT INTO designer(name, phone, age, level, price_by_day, enabled)
+        VALUES (#{name}, #{phone}, #{age}, #{level}, #{priceByDay}, 1);
+    </insert>
+    <update id="update">
+        UPDATE designer SET
+            name = #{name},
+            phone = #{phone},
+            age = #{age},
+            level = #{level},
+            price_by_day = #{priceByDay},
+            enabled = #{enabled}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="com.screw.domain.designer.Designer">
+        DELETE FROM designer where id = #{id}
+    </delete>
+</mapper>
