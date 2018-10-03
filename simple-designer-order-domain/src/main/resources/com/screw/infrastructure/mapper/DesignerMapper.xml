@@ -47,7 +47,7 @@
         <if test="phone!=null and phone!=''"> AND phone = #{phone}</if>
     </select>
 
-    <insert id="create">
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO designer(name, phone, age, level, price_by_day, enabled)
         VALUES (#{name}, #{phone}, #{age}, #{level}, #{priceByDay}, 1);
     </insert>

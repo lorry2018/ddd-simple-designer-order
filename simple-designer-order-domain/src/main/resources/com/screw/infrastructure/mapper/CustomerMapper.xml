@@ -82,7 +82,7 @@
         <if test="address.province!=null and address.province!=''"> AND customer.province = #{address.province}</if>
     </select>
 
-    <insert id="create">
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO customer(name, phone, province, city, zone, address, post_code, enabled)
         VALUES (#{name}, #{phone}, #{address.province}, #{address.city}, #{address.zone}, #{address.address}, #{address.postCode}, #{enabled})
     </insert>

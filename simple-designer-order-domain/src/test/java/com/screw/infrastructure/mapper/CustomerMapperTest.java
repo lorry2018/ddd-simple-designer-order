@@ -24,14 +24,15 @@ public class CustomerMapperTest {
 
     @Test
     public void crud() {
-        int affectRows = customerMapper.create(newCustomer());
+        Customer customer = newCustomer();
+        int affectRows = customerMapper.create(customer);
         Assert.assertEquals(1, affectRows);
 
         List<Customer> customers = customerMapper.selectAll();
         Assert.assertEquals(2, customers.size());
         Assert.assertEquals(1, customers.get(0).getDesignerOrders().size());
 
-        Customer customer = customerMapper.selectByKey(1);
+        customer = customerMapper.selectByKey(1);
         Assert.assertTrue(customer != null);
 
         customer = customerMapper.selectOneBySpecification(newCustomer());

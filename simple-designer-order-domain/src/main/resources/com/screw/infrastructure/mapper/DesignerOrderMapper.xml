@@ -58,14 +58,14 @@
         <if test="customerId!=null and customerId!=''"> AND customer_id = #{customerId}</if>
     </select>
 
-    <insert id="create">
-        INSERT INTO designer_id(customer_id, designer_id, state)
-        VALUES (#{customerId}, #{designerId}, #{state})
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO designer_order(customer_id, designer_id, state)
+        VALUES (#{customerId}, #{designerId}, #{state.code})
     </insert>
     <update id="update">
         UPDATE designer_order SET
             designer_id = #{designerId},
-            state = #{state},
+            state = #{state.code},
             area = #{area},
             expected_amount = #{expectedAmount},
             actual_paid_amount = #{actualPaidAmount},
