@@ -10,13 +10,15 @@ import java.util.List;
 
 @Repository
 public class DesignerRepositoryImpl implements DesignerRepository {
+    private final static String DESIGNER_TABLE = "designer";
+
     @Autowired
     private DesignerMapper designerMapper;
 
     @Override
     public void create(Designer designer) {
         if (designerMapper.create(designer) == 0) {
-            TableException.throwTableException("designer", TableOperation.CREATE);
+            TableException.throwTableException(DESIGNER_TABLE, TableOperation.CREATE);
         }
     }
 
@@ -43,14 +45,14 @@ public class DesignerRepositoryImpl implements DesignerRepository {
     @Override
     public void update(Designer designer) {
         if (designerMapper.update(designer) == 0) {
-            TableException.throwTableException("designer", TableOperation.UPDATE);
+            TableException.throwTableException(DESIGNER_TABLE, TableOperation.UPDATE);
         }
     }
 
     @Override
     public void delete(Designer designer) {
         if (designerMapper.delete(designer) == 0) {
-            TableException.throwTableException("designer", TableOperation.DELETE);
+            TableException.throwTableException(DESIGNER_TABLE, TableOperation.DELETE);
         }
     }
 }

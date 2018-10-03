@@ -10,13 +10,14 @@ import java.util.List;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
+    private final static String CUSTOMER_TABLE = "customer";
     @Autowired
     private CustomerMapper customerMapper;
 
     @Override
     public void create(Customer customer) {
         if (customerMapper.create(customer) == 0) {
-            TableException.throwTableException("customer", TableOperation.CREATE);
+            TableException.throwTableException(CUSTOMER_TABLE, TableOperation.CREATE);
         }
     }
 
@@ -43,14 +44,14 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     @Override
     public void update(Customer customer) {
         if (customerMapper.update(customer) == 0) {
-            TableException.throwTableException("customer", TableOperation.UPDATE);
+            TableException.throwTableException(CUSTOMER_TABLE, TableOperation.UPDATE);
         }
     }
 
     @Override
     public void delete(Customer customer) {
         if (customerMapper.delete(customer) == 0) {
-            TableException.throwTableException("customer", TableOperation.DELETE);
+            TableException.throwTableException(CUSTOMER_TABLE, TableOperation.DELETE);
         }
     }
 }

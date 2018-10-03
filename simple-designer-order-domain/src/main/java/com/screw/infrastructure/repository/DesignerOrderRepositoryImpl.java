@@ -10,13 +10,15 @@ import java.util.List;
 
 @Repository
 public class DesignerOrderRepositoryImpl implements DesignerOrderRepository {
+    private final static String DESIGNER_ORDER_TABLE = "designer_order";
+
     @Autowired
     private DesignerOrderMapper designerOrderMapper;
 
     @Override
     public void create(DesignerOrder order) {
         if (designerOrderMapper.create(order) == 0) {
-            TableException.throwTableException("designer_order", TableOperation.CREATE);
+            TableException.throwTableException(DESIGNER_ORDER_TABLE, TableOperation.CREATE);
         }
     }
 
@@ -43,14 +45,14 @@ public class DesignerOrderRepositoryImpl implements DesignerOrderRepository {
     @Override
     public void update(DesignerOrder order) {
         if (designerOrderMapper.update(order) == 0) {
-            TableException.throwTableException("designer_order", TableOperation.UPDATE);
+            TableException.throwTableException(DESIGNER_ORDER_TABLE, TableOperation.UPDATE);
         }
     }
 
     @Override
     public void delete(DesignerOrder order) {
         if (designerOrderMapper.delete(order) == 0) {
-            TableException.throwTableException("designer_order", TableOperation.DELETE);
+            TableException.throwTableException(DESIGNER_ORDER_TABLE, TableOperation.DELETE);
         }
     }
 }
