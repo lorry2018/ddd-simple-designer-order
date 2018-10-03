@@ -21,4 +21,18 @@ public class CustomerController {
         boolean can = customerService.canCreateDesignerOrder(customerId);
         return ResultMessage.success(can);
     }
+
+    @RequestMapping("/enable")
+    @ResponseBody
+    public ResultMessage enable(@RequestParam("customerId") @NotNull int customerId) {
+        customerService.enable(customerId);
+        return ResultMessage.success();
+    }
+
+    @RequestMapping("/disable")
+    @ResponseBody
+    public ResultMessage disable(@RequestParam("customerId") @NotNull int customerId) {
+        customerService.disable(customerId);
+        return ResultMessage.success();
+    }
 }
