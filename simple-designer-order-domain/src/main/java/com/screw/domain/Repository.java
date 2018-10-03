@@ -8,6 +8,6 @@ public interface Repository<TEntity> {
     TEntity selectOneBySpecification(TEntity example);
     List<TEntity> selectAll();
     List<TEntity> selectBySpecification(TEntity example);
-    void update(TEntity customer);
-    void delete(TEntity customer);
+    void update(TEntity entity);
+    void delete(TEntity entity);
 }

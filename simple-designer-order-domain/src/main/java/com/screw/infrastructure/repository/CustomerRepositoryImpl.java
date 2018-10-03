@@ -15,36 +15,42 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public void create(Customer customer) {
-
+        if (customerMapper.create(customer) == 0) {
+            TableException.throwTableException("customer", TableOperation.CREATE);
+        }
     }
 
     @Override
     public Customer selectByKey(int id) {
-        return null;
+        return customerMapper.selectByKey(id);
     }
 
     @Override
     public Customer selectOneBySpecification(Customer example) {
-        return null;
+        return customerMapper.selectOneBySpecification(example);
     }
 
     @Override
     public List<Customer> selectAll() {
-        return null;
+        return customerMapper.selectAll();
     }
 
     @Override
     public List<Customer> selectBySpecification(Customer example) {
-        return null;
+        return customerMapper.selectBySpecification(example);
     }
 
     @Override
     public void update(Customer customer) {
-
+        if (customerMapper.update(customer) == 0) {
+            TableException.throwTableException("customer", TableOperation.UPDATE);
+        }
     }
 
     @Override
     public void delete(Customer customer) {
-
+        if (customerMapper.delete(customer) == 0) {
+            TableException.throwTableException("customer", TableOperation.DELETE);
+        }
     }
 }

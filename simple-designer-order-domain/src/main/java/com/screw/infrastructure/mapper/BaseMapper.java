@@ -8,6 +8,6 @@ public interface BaseMapper<TEntity> {
     TEntity selectOneBySpecification(TEntity example);
     List<TEntity> selectAll();
     List<TEntity> selectBySpecification(TEntity example);
-    int update(TEntity customer);
-    int delete(TEntity customer);
+    int update(TEntity entity);
+    int delete(TEntity entity);
 }

@@ -2,44 +2,55 @@ package com.screw.infrastructure.repository;
 
 import com.screw.domain.order.DesignerOrder;
 import com.screw.domain.order.DesignerOrderRepository;
+import com.screw.infrastructure.mapper.DesignerOrderMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public class DesignerOrderRepositoryImpl implements DesignerOrderRepository {
+    @Autowired
+    private DesignerOrderMapper designerOrderMapper;
+
     @Override
     public void create(DesignerOrder order) {
-
+        if (designerOrderMapper.create(order) == 0) {
+            TableException.throwTableException("designer_order", TableOperation.CREATE);
+        }
     }
 
     @Override
     public DesignerOrder selectByKey(int id) {
-        return null;
+        return designerOrderMapper.selectByKey(id);
     }
 
     @Override
     public DesignerOrder selectOneBySpecification(DesignerOrder example) {
-        return null;
+        return designerOrderMapper.selectOneBySpecification(example);
     }
 
     @Override
     public List<DesignerOrder> selectAll() {
-        return null;
+        return designerOrderMapper.selectAll();
     }
 
     @Override
     public List<DesignerOrder> selectBySpecification(DesignerOrder example) {
-        return null;
+        return designerOrderMapper.selectBySpecification(example);
     }
 
     @Override
-    public void update(DesignerOrder customer) {
-
+    public void update(DesignerOrder order) {
+        if (designerOrderMapper.update(order) == 0) {
+            TableException.throwTableException("designer_order", TableOperation.UPDATE);
+        }
     }
 
     @Override
-    public void delete(DesignerOrder customer) {
-
+    public void delete(DesignerOrder order) {
+        if (designerOrderMapper.delete(order) == 0) {
+            TableException.throwTableException("designer_order", TableOperation.DELETE);
+        }
     }
 }

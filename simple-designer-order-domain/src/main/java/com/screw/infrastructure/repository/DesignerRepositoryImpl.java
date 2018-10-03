@@ -2,44 +2,55 @@ package com.screw.infrastructure.repository;
 
 import com.screw.domain.designer.Designer;
 import com.screw.domain.designer.DesignerRepository;
+import com.screw.infrastructure.mapper.DesignerMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public class DesignerRepositoryImpl implements DesignerRepository {
+    @Autowired
+    private DesignerMapper designerMapper;
+
     @Override
     public void create(Designer designer) {
-
+        if (designerMapper.create(designer) == 0) {
+            TableException.throwTableException("designer", TableOperation.CREATE);
+        }
     }
 
     @Override
     public Designer selectByKey(int id) {
-        return null;
+        return designerMapper.selectByKey(id);
     }
 
     @Override
     public Designer selectOneBySpecification(Designer example) {
-        return null;
+        return designerMapper.selectOneBySpecification(example);
     }
 
     @Override
     public List<Designer> selectAll() {
-        return null;
+        return designerMapper.selectAll();
     }
 
     @Override
     public List<Designer> selectBySpecification(Designer example) {
-        return null;
+        return designerMapper.selectBySpecification(example);
     }
 
     @Override
-    public void update(Designer customer) {
-
+    public void update(Designer designer) {
+        if (designerMapper.update(designer) == 0) {
+            TableException.throwTableException("designer", TableOperation.UPDATE);
+        }
     }
 
     @Override
-    public void delete(Designer customer) {
-
+    public void delete(Designer designer) {
+        if (designerMapper.delete(designer) == 0) {
+            TableException.throwTableException("designer", TableOperation.DELETE);
+        }
     }
 }
