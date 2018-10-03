@@ -7,7 +7,7 @@ CREATE TABLE `customer` (
   `zone` varchar(45) DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
   `post_code` varchar(45) DEFAULT NULL,
-  `enabled` bit(1) DEFAULT NULL,
+  `enabled` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE `designer` (
   `age` int(11) DEFAULT NULL,
   `level` varchar(45) DEFAULT NULL,
   `price_by_day` float DEFAULT NULL,
-  `enabled` bit(1) DEFAULT NULL,
+  `enabled` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
