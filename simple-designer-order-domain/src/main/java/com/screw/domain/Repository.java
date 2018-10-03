@@ -5,7 +5,7 @@ import java.util.List;
 public interface Repository<TEntity> {
     void create(TEntity entity);
     TEntity selectByKey(int id);
-    TEntity selectOne(TEntity example);
+    TEntity selectOneBySpecification(TEntity example);
     List<TEntity> selectAll();
     List<TEntity> selectBySpecification(TEntity example);
     void update(TEntity customer);

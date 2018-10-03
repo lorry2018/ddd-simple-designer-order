@@ -19,7 +19,7 @@ public class DesignerRepositoryImpl implements DesignerRepository {
     }
 
     @Override
-    public Designer selectOne(Designer example) {
+    public Designer selectOneBySpecification(Designer example) {
         return null;
     }
 

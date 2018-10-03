@@ -24,7 +24,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public Customer selectOne(Customer example) {
+    public Customer selectOneBySpecification(Customer example) {
         return null;
     }
 
