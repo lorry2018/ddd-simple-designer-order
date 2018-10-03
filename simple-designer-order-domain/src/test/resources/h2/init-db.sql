@@ -6,7 +6,7 @@ CREATE TABLE `customer` (
   `city` varchar(45) DEFAULT NULL,
   `zone` varchar(45) DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
-  `postCode` varchar(45) DEFAULT NULL,
+  `post_code` varchar(45) DEFAULT NULL,
   `enabled` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );

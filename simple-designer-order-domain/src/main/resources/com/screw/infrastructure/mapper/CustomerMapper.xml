@@ -23,12 +23,12 @@
         <result column="city" property="address.city" />
         <result column="zone" property="address.zone" />
         <result column="address" property="address.address" />
-        <result column="postCode" property="address.postCode" />
+        <result column="post_code" property="address.postCode" />
         <result column="enabled" property="enabled"/>
 
         <collection property="designerOrders" resultMap="orderResultMap" />
     </resultMap>
-    <select id="selectAll" resultMap="customerResultMap">
+    <sql id="selectPart">
         SELECT customer.id,
             customer.name,
             customer.phone,
@@ -36,7 +36,7 @@
             customer.city,
             customer.zone,
             customer.address,
-            customer.postCode,
+            customer.post_code,
             customer.enabled,
             designer_order.id as order_id,
             designer_order.customer_id,
@@ -52,7 +52,53 @@
             designer_order.created_time,
             designer_order.updated_time
         FROM customer
-        LEFT OUTER JOIN designer_order
-        ON customer.id = designer_order.customer_id
+            LEFT OUTER JOIN designer_order
+                ON customer.id = designer_order.customer_id
+    </sql>
+
+    <select id="selectByKey" resultMap="customerResultMap">
+        <include refid="selectPart" />
+        WHERE customer.id = #{id}
     </select>
+
+    <select id="selectOneBySpecification" resultMap="customerResultMap">
+        <include refid="selectPart" />
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND customer.id = #{id}</if>
+        <if test="name!=null and name!=''"> AND customer.name = #{name}</if>
+        <if test="phone!=null and phone!=''"> AND customer.phone = #{phone}</if>
+    </select>
+
+    <select id="selectAll" resultMap="customerResultMap">
+        <include refid="selectPart" />
+    </select>
+
+    <select id="selectBySpecification" resultMap="customerResultMap">
+        <include refid="selectPart" />
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND customer.id = #{id}</if>
+        <if test="name!=null and name!=''"> AND customer.name = #{name}</if>
+        <if test="phone!=null and phone!=''"> AND customer.phone = #{phone}</if>
+        <if test="address.province!=null and address.province!=''"> AND customer.province = #{address.province}</if>
+    </select>
+
+    <insert id="create">
+        INSERT INTO customer(name, phone, province, city, zone, address, post_code, enabled)
+        VALUES (#{name}, #{phone}, #{address.province}, #{address.city}, #{address.zone}, #{address.address}, #{address.postCode}, #{enabled})
+    </insert>
+    <update id="update">
+        UPDATE customer SET
+            name = #{name},
+            phone = #{phone},
+            province = #{address.province},
+            city = #{address.city},
+            zone = #{address.zone},
+            address = #{address.address},
+            post_code = #{address.postCode},
+            enabled = #{enabled}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="com.screw.domain.customer.Customer">
+        DELETE FROM customer where id = #{id}
+    </delete>
 </mapper>
