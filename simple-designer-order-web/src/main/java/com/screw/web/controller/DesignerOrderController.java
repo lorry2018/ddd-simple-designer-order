@@ -16,6 +16,12 @@ public class DesignerOrderController {
     @Autowired
     private DesignerOrderService designerOrderService;
 
+    @RequestMapping("/selectByKey")
+    @ResponseBody
+    public ResultMessage create(@RequestParam("orderId") @NotNull int orderId) {
+        return ResultMessage.success(designerOrderService.selectByKey(orderId));
+    }
+
     @RequestMapping("/create")
     @ResponseBody
     public ResultMessage create(@RequestParam("customerId") @NotNull int customerId,

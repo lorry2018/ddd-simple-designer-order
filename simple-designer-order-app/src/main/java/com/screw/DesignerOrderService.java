@@ -3,6 +3,7 @@ package com.screw;
 import com.screw.domain.order.DesignerOrder;
 
 public interface DesignerOrderService {
+    DesignerOrder selectByKey(int orderId);
     DesignerOrder createOrder(int customerId, int designerId);
     void quote(int orderId, float expectedAmount, int estimatedDays);
     void acceptPrice(int orderId);
