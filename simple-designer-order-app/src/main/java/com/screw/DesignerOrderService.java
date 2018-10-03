@@ -5,6 +5,7 @@ import com.screw.domain.order.DesignerOrder;
 public interface DesignerOrderService {
     DesignerOrder selectByKey(int orderId);
     DesignerOrder createOrder(int customerId, int designerId);
+    void measure(int orderId, float area);
     void quote(int orderId, float expectedAmount, int estimatedDays);
     void acceptPrice(int orderId);
     void rejectPrice(int orderId);

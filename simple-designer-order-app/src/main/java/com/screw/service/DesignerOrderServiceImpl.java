@@ -27,6 +27,17 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     }
 
     @Override
+    public void measure(int orderId, float area) {
+        DesignerOrder order = designerOrderRepository.selectByKey(orderId);
+        if (order == null) {
+            return;
+        }
+
+        order.measure(area);
+        designerOrderRepository.update(order);
+    }
+
+    @Override
     public void quote(int orderId, float expectedAmount, int estimatedDays) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {

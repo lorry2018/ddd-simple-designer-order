@@ -52,7 +52,7 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     public void pay(float amount) {
         Assert.isTrue(amount > 0, "The amount must be bigger than 0.");
 
-        if (DesignerOrderWorkflowService.canChangeState(state, DesignerOrderState.PAID)) {
+        if (!DesignerOrderWorkflowService.canChangeState(state, DesignerOrderState.PAID)) {
             throw new DomainException("The order state is " + this.state + " , can not be paid.");
         }
 

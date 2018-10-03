@@ -30,6 +30,14 @@ public class DesignerOrderController {
         return ResultMessage.success(order);
     }
 
+    @RequestMapping("/measure")
+    @ResponseBody
+    public ResultMessage measure(@RequestParam("orderId") @NotNull int orderId,
+                               @RequestParam("area") @NotNull float area) {
+        designerOrderService.measure(orderId, area);
+        return ResultMessage.success();
+    }
+
     @RequestMapping("/quote")
     @ResponseBody
     public ResultMessage quote(@RequestParam("orderId") @NotNull int orderId,

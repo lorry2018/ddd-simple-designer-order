@@ -71,9 +71,9 @@
             actual_paid_amount = #{actualPaidAmount},
             abort_cause = #{abortCause},
             feedback_star = #{feedbackStar},
-            feedback_description = #{feedback_description},
+            feedback_description = #{feedbackDescription},
             updated_time = SYSDATE()
-        WHERE id = #{id} and updated_timed = #{updatedTime}
+        WHERE id = #{id} and updated_time = #{updatedTime}
     </update>
     <delete id="delete" parameterType="com.screw.domain.order.DesignerOrder">
         DELETE FROM designer_order where id = #{id}
