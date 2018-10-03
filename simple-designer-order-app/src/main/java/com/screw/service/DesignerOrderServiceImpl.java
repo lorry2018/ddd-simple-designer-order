@@ -18,7 +18,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public DesignerOrder createOrder(int customerId, int designerId) {
         DesignerOrder order = DesignerOrderFactory.createOrder(customerId, designerId);
         designerOrderRepository.create(order);
-        return order;
+        return designerOrderRepository.selectByKey(order.getId());
     }
 
     @Override

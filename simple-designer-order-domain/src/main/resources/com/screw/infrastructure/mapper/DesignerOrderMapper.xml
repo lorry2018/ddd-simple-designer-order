@@ -59,8 +59,8 @@
     </select>
 
     <insert id="create" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO designer_order(customer_id, designer_id, state)
-        VALUES (#{customerId}, #{designerId}, #{state.code})
+        INSERT INTO designer_order(customer_id, designer_id, state, created_time, updated_time)
+        VALUES (#{customerId}, #{designerId}, #{state.code}, SYSDATE(), SYSDATE())
     </insert>
     <update id="update">
         UPDATE designer_order SET
