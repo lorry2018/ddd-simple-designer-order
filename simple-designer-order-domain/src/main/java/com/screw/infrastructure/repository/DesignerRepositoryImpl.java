@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class DesignerRepositoryImpl implements DesignerRepository {
-    private final static String DESIGNER_TABLE = "designer";
+    private static final String DESIGNER_TABLE = "designer";
 
     @Autowired
     private DesignerMapper designerMapper;

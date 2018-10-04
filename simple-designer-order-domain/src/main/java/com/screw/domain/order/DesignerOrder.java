@@ -1,6 +1,7 @@
 package com.screw.domain.order;
 
 import com.screw.domain.DomainException;
+import com.screw.domain.DomainExceptionMessage;
 import com.screw.domain.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,11 +54,11 @@ public class DesignerOrder implements Entity<DesignerOrder> {
         Assert.isTrue(amount > 0, "The amount must be bigger than 0.");
 
         if (!DesignerOrderWorkflowService.canChangeState(state, DesignerOrderState.PAID)) {
-            throw new DomainException("The order state is " + this.state + " , can not be paid.");
+            DomainException.throwDomainException(DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE_CODE, DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE, this.id, this.state);
         }
 
         if (Math.abs(amount - this.expectedAmount) < 0.0001) {
-            throw new DomainException("The payment is not the matched. The expected payment is " + this.expectedAmount + " , the actual payment is " + amount + ".");
+            DomainException.throwDomainException(DomainExceptionMessage.PAYMENT_NOT_MATCHED_CODE, DomainExceptionMessage.PAYMENT_NOT_MATCHED, this.id, this.expectedAmount, amount);
         }
 
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.PAID);

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
-    private final static String CUSTOMER_TABLE = "customer";
+    private static final String CUSTOMER_TABLE = "customer";
     @Autowired
     private CustomerMapper customerMapper;
 

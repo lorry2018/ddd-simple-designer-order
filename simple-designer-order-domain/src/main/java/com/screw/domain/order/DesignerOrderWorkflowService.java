@@ -1,6 +1,7 @@
 package com.screw.domain.order;
 
 import com.screw.domain.DomainException;
+import com.screw.domain.DomainExceptionMessage;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class DesignerOrderWorkflowService {
 
     public static DesignerOrderState changeState(long orderId, DesignerOrderState state, DesignerOrderState nextState) {
         if (!canChangeState(state, nextState)) {
-            throw new DomainException("Can not change the order " + orderId + " from " + state.toString() + " to " + nextState.toString());
+            DomainException.throwDomainException(DomainExceptionMessage.STATE_CHANGE_ILLEGAL_CODE, DomainExceptionMessage.STATE_CHANGE_ILLEGAL, orderId, state, nextState);
         }
 
         return nextState;
