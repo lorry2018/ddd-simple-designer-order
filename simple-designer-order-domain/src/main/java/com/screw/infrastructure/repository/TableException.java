@@ -29,7 +29,7 @@ public class TableException extends RuntimeException {
     }
 
     public static TableException throwTableException(String table, TableOperation operation) {
-        String error = MessageFormat.format("Faild to do action '{0}' on table {1}.", operation, table);
+        String error = MessageFormat.format("Failed to do action {0} on table {1}.", operation, table);
         throw new TableException(error);
     }
 }
