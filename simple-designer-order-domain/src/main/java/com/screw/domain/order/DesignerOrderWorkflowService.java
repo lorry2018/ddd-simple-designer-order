@@ -16,27 +16,18 @@ public class DesignerOrderWorkflowService {
     private DesignerOrderWorkflowService() { }
 
     private static Map<DesignerOrderState, DesignerOrderState[]> states = new HashMap<>();
-    private static Map<DesignerOrderState, String[]> actions = new HashMap<>();
     static {
         states.put(DesignerOrderState.NEW, new DesignerOrderState[]{ DesignerOrderState.MEASURED, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.MEASURED, new DesignerOrderState[]{ DesignerOrderState.QUOTED, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.QUOTED, new DesignerOrderState[]{ DesignerOrderState.ACCEPT_QUOTE, DesignerOrderState.REJECT_QUOTE, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.REJECT_QUOTE, new DesignerOrderState[]{ DesignerOrderState.MEASURED, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.ACCEPT_QUOTE, new DesignerOrderState[]{ DesignerOrderState.PAID, DesignerOrderState.ABORTED });
-        states.put(DesignerOrderState.PAID, new DesignerOrderState[]{ DesignerOrderState.REQUEST_COMPLETION });
-        states.put(DesignerOrderState.REQUEST_COMPLETION, new DesignerOrderState[]{ DesignerOrderState.CONFIRM_COMPLETION });
-        states.put(DesignerOrderState.CONFIRM_COMPLETION, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK });
-        states.put(DesignerOrderState.FEEDBACK, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK }); // 允许多次评价
+        states.put(DesignerOrderState.PAID, new DesignerOrderState[]{ DesignerOrderState.REFUND, DesignerOrderState.COMPLETION });
+        states.put(DesignerOrderState.COMPLETION, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK });
 
-        actions.put(DesignerOrderState.NEW, new String[]{ "量房", "终止" });
-        actions.put(DesignerOrderState.MEASURED, new String[]{ "报价", "终止" });
-        actions.put(DesignerOrderState.QUOTED, new String[]{ "接受报价", "拒绝报价", "终止" });
-        actions.put(DesignerOrderState.REJECT_QUOTE, new String[]{ "量房", "终止" });
-        actions.put(DesignerOrderState.ACCEPT_QUOTE, new String[]{ "付款", "终止" });
-        actions.put(DesignerOrderState.PAID, new String[]{ "请求完成" });
-        actions.put(DesignerOrderState.REQUEST_COMPLETION, new String[]{ "确定完成" });
-        actions.put(DesignerOrderState.CONFIRM_COMPLETION, new String[]{ "评价" });
-        actions.put(DesignerOrderState.FEEDBACK, new String[]{ "评价" });
+        states.put(DesignerOrderState.ABORTED, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK });
+        states.put(DesignerOrderState.REFUND, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK });
+        states.put(DesignerOrderState.FEEDBACK, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK }); // 允许多次评价
     }
 
     public static boolean canChangeState(DesignerOrderState state, DesignerOrderState nextState) {
@@ -53,10 +44,8 @@ public class DesignerOrderWorkflowService {
         return false;
     }
 
-    public static String[] getNextActions(DesignerOrderState state) {
-        Assert.notNull(state, "The state can not be null.");
-
-        return actions.get(state);
+    public static boolean canAbort(DesignerOrder order) {
+        return canChangeState(order.getState(), DesignerOrderState.ABORTED);
     }
 
     public static DesignerOrderState changeState(long orderId, DesignerOrderState state, DesignerOrderState nextState) {
@@ -67,27 +56,10 @@ public class DesignerOrderWorkflowService {
         return nextState;
     }
 
-    private static boolean isInDesigning(DesignerOrder order) {
-        if (order.getState() != DesignerOrderState.ABORTED &&
-                order.getState() != DesignerOrderState.PAID &&
-                order.getState() != DesignerOrderState.CONFIRM_COMPLETION &&
-                order.getState() != DesignerOrderState.FEEDBACK) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static boolean canAbort(DesignerOrder order) {
-        return !isInDesigning(order) || order.getState() == DesignerOrderState.ABORTED;
-    }
-
-    public static boolean isAborted(DesignerOrder order) {
-        return order.getState() == DesignerOrderState.ABORTED;
-    }
-
     public static boolean isCompleted(DesignerOrder order) {
-        return order.getState() == DesignerOrderState.CONFIRM_COMPLETION ||
+        return order.getState() == DesignerOrderState.ABORTED ||
+                order.getState() == DesignerOrderState.REFUND ||
+                order.getState() == DesignerOrderState.COMPLETION ||
                 order.getState() == DesignerOrderState.FEEDBACK;
     }
 }

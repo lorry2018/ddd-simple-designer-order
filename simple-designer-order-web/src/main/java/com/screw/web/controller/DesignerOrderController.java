@@ -2,6 +2,7 @@ package com.screw.web.controller;
 
 import com.screw.DesignerOrderService;
 import com.screw.domain.order.DesignerOrder;
+import com.screw.domain.order.DesigningProgressNodeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,24 +41,26 @@ public class DesignerOrderController {
 
     @RequestMapping("/quote")
     @ResponseBody
-    public ResultMessage quote(@RequestParam("orderId") @NotNull int orderId,
-                      @RequestParam("expectedAmount") @NotNull float expectedAmount,
-                      @RequestParam("estimatedDays") @NotNull int estimatedDays) {
-        designerOrderService.quote(orderId, expectedAmount, estimatedDays);
+    public ResultMessage quote(@RequestParam("orderId") int orderId,
+                      @RequestParam("expectedAmount") float expectedAmount,
+                      @RequestParam(value = "estimatedDaysList[]", required = false) int[] estimatedDaysList) {
+        estimatedDaysList = new int[] {1, 4, 4, 1};
+
+        designerOrderService.quote(orderId, expectedAmount, estimatedDaysList);
         return ResultMessage.success();
     }
 
-    @RequestMapping("/acceptPrice")
+    @RequestMapping("/acceptQuote")
     @ResponseBody
-    public ResultMessage acceptPrice(@RequestParam("orderId") @NotNull int orderId) {
-        designerOrderService.acceptPrice(orderId);
+    public ResultMessage acceptQuote(@RequestParam("orderId") @NotNull int orderId) {
+        designerOrderService.acceptQuote(orderId);
         return ResultMessage.success();
     }
 
-    @RequestMapping("/rejectPrice")
+    @RequestMapping("/rejectQuote")
     @ResponseBody
-    public ResultMessage rejectPrice(@RequestParam("orderId") @NotNull int orderId) {
-        designerOrderService.rejectPrice(orderId);
+    public ResultMessage rejectQuote(@RequestParam("orderId") @NotNull int orderId) {
+        designerOrderService.rejectQuote(orderId);
         return ResultMessage.success();
     }
 
@@ -77,17 +80,42 @@ public class DesignerOrderController {
         return ResultMessage.success();
     }
 
-    @RequestMapping("/requestCompletion")
+    @RequestMapping("/requestCompletionForProgressNode")
     @ResponseBody
-    public ResultMessage requestCompletion(@RequestParam("orderId") @NotNull int orderId) {
-        designerOrderService.requestCompletion(orderId);
+    public ResultMessage requestCompletionForProgressNode(@RequestParam("orderId") @NotNull int orderId,
+                                           @RequestParam("nodeType") @NotNull int nodeTypeCode,
+                                           @RequestParam("achievement") @NotNull String achievement) {
+        designerOrderService.requestCompletionForProgressNode(orderId, convertToNodeType(nodeTypeCode), achievement);
         return ResultMessage.success();
     }
 
-    @RequestMapping("/confirmCompletion")
+    private DesigningProgressNodeType convertToNodeType(int nodeTypeCode) {
+        DesigningProgressNodeType nodeType = DesigningProgressNodeType.FLOORPLAN_DESIGN;
+        if (DesigningProgressNodeType.FLOORPLAN_DESIGN.getCode() == nodeTypeCode) {
+            nodeType = DesigningProgressNodeType.FLOORPLAN_DESIGN;
+        } else if (DesigningProgressNodeType.SKETCH_DESIGN.getCode() == nodeTypeCode) {
+            nodeType = DesigningProgressNodeType.SKETCH_DESIGN;
+        } else if (DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN.getCode() == nodeTypeCode) {
+            nodeType = DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN;
+        } else if (DesigningProgressNodeType.DISCLOSURE.getCode() == nodeTypeCode) {
+            nodeType = DesigningProgressNodeType.DISCLOSURE;
+        }
+        return nodeType;
+    }
+
+    @RequestMapping("/confirmCompletionForProgressNode")
     @ResponseBody
-    public ResultMessage confirmCompletion(@RequestParam("orderId") @NotNull int orderId) {
-        designerOrderService.confirmCompletion(orderId);
+    public ResultMessage confirmCompletionForProgressNode(@RequestParam("orderId") @NotNull int orderId,
+                                                          @RequestParam("nodeType") @NotNull int nodeTypeCode) {
+        designerOrderService.confirmCompletionForProgressNode(orderId, convertToNodeType(nodeTypeCode));
+        return ResultMessage.success();
+    }
+
+    @RequestMapping("/refund")
+    @ResponseBody
+    public ResultMessage refund(@RequestParam("orderId") @NotNull int orderId,
+                                                          @RequestParam("cause") @NotNull String cause) {
+        designerOrderService.refund(orderId, cause);
         return ResultMessage.success();
     }
 

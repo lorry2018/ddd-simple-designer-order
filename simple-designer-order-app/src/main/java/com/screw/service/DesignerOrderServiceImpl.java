@@ -1,9 +1,9 @@
 package com.screw.service;
 
 import com.screw.DesignerOrderService;
-import com.screw.domain.order.DesignerOrder;
-import com.screw.domain.order.DesignerOrderFactory;
-import com.screw.domain.order.DesignerOrderRepository;
+import com.screw.domain.order.*;
+import com.screw.domain.refund.RefundOrder;
+import com.screw.domain.refund.RefundOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class DesignerOrderServiceImpl implements DesignerOrderService {
     @Autowired
     private DesignerOrderRepository designerOrderRepository;
+    @Autowired
+    private RefundOrderRepository refundOrderRepository;
 
     @Override
     public DesignerOrder selectByKey(int orderId) {
@@ -38,35 +40,35 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     }
 
     @Override
-    public void quote(int orderId, float expectedAmount, int estimatedDays) {
+    public void quote(int orderId, float expectedAmount, int[] estimatedDaysList) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
             return;
         }
 
-        order.quote(expectedAmount, estimatedDays);
+        order.quote(expectedAmount, estimatedDaysList);
         designerOrderRepository.update(order);
     }
 
     @Override
-    public void acceptPrice(int orderId) {
+    public void acceptQuote(int orderId) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
             return;
         }
 
-        order.acceptPrice();
+        order.acceptQuote();
         designerOrderRepository.update(order);
     }
 
     @Override
-    public void rejectPrice(int orderId) {
+    public void rejectQuote(int orderId) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
             return;
         }
 
-        order.rejectPrice();
+        order.rejectQuote();
         designerOrderRepository.update(order);
     }
 
@@ -94,27 +96,40 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     }
 
     @Override
-    public void requestCompletion(int orderId) {
+    public void requestCompletionForProgressNode(int orderId, DesigningProgressNodeType nodeType, String achievement) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
             return;
         }
 
-        order.requestCompletion();
+        order.requestCompletionForProgressNode(nodeType, achievement);
 
         designerOrderRepository.update(order);
     }
 
     @Override
-    public void confirmCompletion(int orderId) {
+    public void confirmCompletionForProgressNode(int orderId, DesigningProgressNodeType nodeType) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
             return;
         }
 
-        order.confirmCompletion();
+        order.confirmCompletionForProgressNode(nodeType);
 
         designerOrderRepository.update(order);
+    }
+
+    @Override
+    public void refund(int orderId, String cause) {
+        DesignerOrder order = designerOrderRepository.selectByKey(orderId);
+        if (order == null) {
+            return;
+        }
+
+        RefundOrder refundOrder = order.refund(cause);
+
+        designerOrderRepository.update(order);
+        refundOrderRepository.create(refundOrder);
     }
 
     @Override

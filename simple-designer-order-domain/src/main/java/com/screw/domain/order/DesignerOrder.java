@@ -3,6 +3,8 @@ package com.screw.domain.order;
 import com.screw.domain.DomainException;
 import com.screw.domain.DomainExceptionMessage;
 import com.screw.domain.Entity;
+import com.screw.domain.refund.RefundOrder;
+import com.screw.domain.refund.RefundOrderFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.Assert;
@@ -16,13 +18,19 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     private DesignerOrderState state;
     private int customerId;
     private int designerId;
-    private float expectedAmount;
-    private float actualPaidAmount;
-    private int estimatedDays;
     private float area;
+
+    private float expectedAmount;
+    private int estimatedDays;
+    private DesigningProgressReport report;
+
     private String abortCause;
+
+    private float actualPaidAmount;
+
     private int feedbackStar;
     private String feedbackDescription;
+
     private Date createdTime;
     private Date updatedTime;
 
@@ -33,21 +41,39 @@ public class DesignerOrder implements Entity<DesignerOrder> {
         this.area = area;
     }
 
-    public void quote(float amount, int days) {
+    public void quote(float amount, int[] estimatedDaysList) {
         Assert.isTrue(amount > 0, "The price must be bigger than 0.");
-        Assert.isTrue(days > 0, "The days must be bigger than 0.");
+        this.assertEstimatedDaysList(estimatedDaysList);
 
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.QUOTED);
         this.expectedAmount = amount;
-        this.estimatedDays = days;
+        this.report = DesigningProgressReportFactory.newReport(this, estimatedDaysList);
+        this.estimatedDays = this.report.getEstimatedCompletionDays();
     }
 
-    public void acceptPrice() {
+    private void assertEstimatedDaysList(int[] estimatedDaysList) {
+        if (null == estimatedDaysList || estimatedDaysList.length != 4) {
+            throw new IllegalArgumentException("The size of estimatedDaysList must be 4.");
+        }
+
+        for (int days : estimatedDaysList) {
+            if (days <= 0) {
+                throw new IllegalArgumentException("Each element of estimatedDaysList must be bigger than 0.");
+            }
+        }
+    }
+
+    public void acceptQuote() {
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.ACCEPT_QUOTE);
     }
 
-    public void rejectPrice() {
+    public void rejectQuote() {
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REJECT_QUOTE);
+    }
+
+    public void abort(String cause) {
+        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.ABORTED);
+        this.abortCause = cause;
     }
 
     public void pay(float amount) {
@@ -63,19 +89,45 @@ public class DesignerOrder implements Entity<DesignerOrder> {
 
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.PAID);
         this.actualPaidAmount = amount;
+
+        // 付款完成后，自动启动进度跟踪
+        this.report.startup();
     }
 
-    public void abort(String cause) {
-        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.ABORTED);
-        this.abortCause = cause;
+    private void assertChangeProgressNode() {
+        if (this.state != DesignerOrderState.PAID) {
+            DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.id, this.state);
+        }
     }
 
-    public void requestCompletion() {
-        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REQUEST_COMPLETION);
+    public void requestCompletionForProgressNode(DesigningProgressNodeType nodeType, String achievement) {
+        this.assertChangeProgressNode();
+
+        DesigningProgressNode node = this.report.getNode(nodeType);
+        node.requestCompletion(achievement);
     }
 
-    public void confirmCompletion() {
-        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.CONFIRM_COMPLETION);
+    public void confirmCompletionForProgressNode(DesigningProgressNodeType nodeType) {
+        this.assertChangeProgressNode();
+
+        DesigningProgressNode node = this.report.getNode(nodeType);
+        node.confirmCompletion();
+    }
+
+    public RefundOrder refund(String cause) {
+        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REFUND);
+
+        DesigningProgressNode constructionDrawingDesignNode = this.report.getNode(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
+        if (constructionDrawingDesignNode.getState() == DesigningProgressNodeState.REQUEST_COMPLETION ||
+                constructionDrawingDesignNode.getState() == DesigningProgressNodeState.CONFIRM_COMPLETION) {
+            DomainException.throwDomainException(DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS_CODE, DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS, this.id);
+        }
+
+        return RefundOrderFactory.newRefundOrder(this, cause);
+    }
+
+    public void complete() {
+        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.COMPLETION);
     }
 
     public void feedback(int star, String description) {

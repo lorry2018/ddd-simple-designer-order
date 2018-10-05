@@ -30,11 +30,11 @@ public class DesignerOrderTest {
     public void quote() {
         DesignerOrder order = DesignerOrderFactory.createOrder(1, 1);
         order.measure(100);
-        order.quote(2000, 5);
+        order.quote(2000, new int[] {1, 4, 4, 1});
 
         assertEquals(DesignerOrderState.QUOTED, order.getState());
         assertEquals(2000, order.getExpectedAmount(), 0.01);
-        assertEquals(5, order.getEstimatedDays());
+        assertEquals(10, order.getEstimatedDays());
     }
 
     @Test
