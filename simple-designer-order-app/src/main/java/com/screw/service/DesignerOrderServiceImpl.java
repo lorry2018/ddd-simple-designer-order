@@ -120,16 +120,18 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     }
 
     @Override
-    public void refund(int orderId, String cause) {
+    public RefundOrder refund(int orderId, String cause) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            return null;
         }
 
         RefundOrder refundOrder = order.refund(cause);
 
         designerOrderRepository.update(order);
         refundOrderRepository.create(refundOrder);
+
+        return refundOrderRepository.selectByKey(refundOrder.getId());
     }
 
     @Override
@@ -142,5 +144,15 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
         order.feedback(star, description);
 
         designerOrderRepository.update(order);
+    }
+
+    @Override
+    public void completeRefundOrder(int refundOrderId) {
+        RefundOrder refundOrder = refundOrderRepository.selectByKey(refundOrderId);
+        if (refundOrder == null) {
+            return;
+        }
+        refundOrder.complete();
+        refundOrderRepository.update(refundOrder);
     }
 }

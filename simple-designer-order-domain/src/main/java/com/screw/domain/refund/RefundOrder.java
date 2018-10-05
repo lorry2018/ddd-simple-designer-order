@@ -17,6 +17,10 @@ public class RefundOrder implements Entity<RefundOrder> {
     private Date createdTime;
     private Date updatedTime;
 
+    public void complete() {
+        completed = true;
+    }
+
     @Override
     public boolean sameIdentityAs(RefundOrder other) {
         return this.equals(other);

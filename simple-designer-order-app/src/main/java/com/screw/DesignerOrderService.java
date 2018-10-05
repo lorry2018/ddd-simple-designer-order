@@ -2,6 +2,7 @@ package com.screw;
 
 import com.screw.domain.order.DesignerOrder;
 import com.screw.domain.order.DesigningProgressNodeType;
+import com.screw.domain.refund.RefundOrder;
 
 public interface DesignerOrderService {
     DesignerOrder selectByKey(int orderId);
@@ -14,6 +15,7 @@ public interface DesignerOrderService {
     void abort(int orderId, String cause);
     void requestCompletionForProgressNode(int orderId, DesigningProgressNodeType nodeType, String achievement);
     void confirmCompletionForProgressNode(int orderId, DesigningProgressNodeType nodeType);
-    void refund(int orderId, String cause);
+    RefundOrder refund(int orderId, String cause);
     void feedback(int orderId, int star, String description);
+    void completeRefundOrder(int refundOrderId);
 }
