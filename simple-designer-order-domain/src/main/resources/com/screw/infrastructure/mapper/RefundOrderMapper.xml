@@ -1,0 +1,64 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.screw.infrastructure.mapper.RefundOrderMapper">
+    <resultMap id="refundOrderResultMap" type="com.screw.domain.refund.RefundOrder">
+        <id column="id" property="id" />
+        <result column="designer_order_id" property="designerOrderId" />
+        <result column="cause" property="cause" />
+        <result column="refund_amount" property="refundAmount" />
+        <result column="completed" property="completed" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+    <sql id="selectPart">
+        SELECT id,
+               designer_order_id,
+               cause,
+               refund_amount,
+               completed,
+               created_time,
+               updated_time
+        FROM refund_order
+    </sql>
+
+    <select id="selectByKey" resultMap="refundOrderResultMap">
+        <include refid="selectPart" />
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectOneBySpecification" resultMap="refundOrderResultMap">
+        <include refid="selectPart" />
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND id = #{id}</if>
+        <if test="name!=null and name!=''"> AND designer_order_id = #{designer_order_id}</if>
+        <if test="phone!=null and phone!=''"> AND completed = #{completed}</if>
+    </select>
+
+    <select id="selectAll" resultMap="refundOrderResultMap">
+        <include refid="selectPart" />
+    </select>
+
+    <select id="selectBySpecification" resultMap="refundOrderResultMap">
+        <include refid="selectPart" />
+        WHERE 1=1
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND id = #{id}</if>
+        <if test="name!=null and name!=''"> AND designer_order_id = #{designer_order_id}</if>
+        <if test="phone!=null and phone!=''"> AND completed = #{completed}</if>
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO refund_order(designer_order_id, cause, refund_amount, completed, createdTime, updatedTime)
+        VALUES (#{designerOrderId}, #{cause}, #{refundAmount}, 0, SYSDATE(), SYSDATE());
+    </insert>
+    <update id="update">
+        UPDATE refund_order
+        SET refund_amount = #{refundAmount},
+            cause = #{cause},
+            completed = #{completed},
+            updated_time = #{updatedTime}
+        WHERE id = #{id} and updated_time = #{updatedTime}
+    </update>
+    <delete id="delete" parameterType="com.screw.domain.refund.RefundOrder">
+        DELETE FROM refund_order where id = #{id}
+    </delete>
+</mapper>

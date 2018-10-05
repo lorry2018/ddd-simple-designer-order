@@ -42,6 +42,17 @@ CREATE TABLE `designer_order` (
   CONSTRAINT `designerId_fk` FOREIGN KEY (`designer_id`) REFERENCES `designer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+CREATE TABLE `refund_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `designer_order_id` int(11) DEFAULT NULL,
+  `cause` varchar(200) DEFAULT NULL,
+  `refundAmount` float DEFAULT NULL,
+  `completed` tinyint DEFAULT 0,
+  `created_time` datetime DEFAULT now(),
+  `updated_time` datetime DEFAULT now(),
+  PRIMARY KEY (`id`)
+);
+
 INSERT INTO `customer` VALUES (1,'lorry','15809233559','陕西省','西安市','高新区','科技六路','710075',1);
 INSERT INTO `designer` VALUES (1,'jessica','13384968373',30,'1',100,1);
 INSERT INTO `designer_order` VALUES (1,1,1,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,'2018-10-03 07:21:58','2018-10-03 07:21:58');
