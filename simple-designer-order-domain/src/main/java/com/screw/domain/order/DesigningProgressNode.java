@@ -3,7 +3,7 @@ package com.screw.domain.order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.screw.domain.DomainException;
 import com.screw.domain.DomainExceptionMessage;
-import com.screw.domain.ValueObject;
+import com.screw.domain.Entity;
 import lombok.Data;
 import lombok.ToString;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Data
 @ToString(of = {"nodeName"})
-public class DesigningProgressNode implements ValueObject<DesigningProgressNode> {
+public class DesigningProgressNode implements Entity<DesigningProgressNode> {
     private static Map<DesigningProgressNodeState, DesigningProgressNodeState> states = new HashMap<>();
     static {
         states.put(DesigningProgressNodeState.NOT_STARTED, DesigningProgressNodeState.STARTED);
@@ -57,7 +57,7 @@ public class DesigningProgressNode implements ValueObject<DesigningProgressNode>
     }
 
     @Override
-    public boolean sameValueAs(DesigningProgressNode other) {
+    public boolean sameIdentityAs(DesigningProgressNode other) {
         if (null == other) {
             return false;
         }
