@@ -22,6 +22,11 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     }
 
     @Override
+    public RefundOrder selectRefundOrderByKey(int orderId) {
+        return refundOrderRepository.selectByKey(orderId);
+    }
+
+    @Override
     public DesignerOrder createOrder(int customerId, int designerId) {
         DesignerOrder order = DesignerOrderFactory.createOrder(customerId, designerId);
         designerOrderRepository.create(order);

@@ -20,7 +20,7 @@ public class DesignerOrderWorkflowService {
         states.put(DesignerOrderState.NEW, new DesignerOrderState[]{ DesignerOrderState.MEASURED, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.MEASURED, new DesignerOrderState[]{ DesignerOrderState.QUOTED, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.QUOTED, new DesignerOrderState[]{ DesignerOrderState.ACCEPT_QUOTE, DesignerOrderState.REJECT_QUOTE, DesignerOrderState.ABORTED });
-        states.put(DesignerOrderState.REJECT_QUOTE, new DesignerOrderState[]{ DesignerOrderState.MEASURED, DesignerOrderState.ABORTED });
+        states.put(DesignerOrderState.REJECT_QUOTE, new DesignerOrderState[]{ DesignerOrderState.QUOTED, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.ACCEPT_QUOTE, new DesignerOrderState[]{ DesignerOrderState.PAID, DesignerOrderState.ABORTED });
         states.put(DesignerOrderState.PAID, new DesignerOrderState[]{ DesignerOrderState.REFUND, DesignerOrderState.COMPLETION });
         states.put(DesignerOrderState.COMPLETION, new DesignerOrderState[]{ DesignerOrderState.FEEDBACK });

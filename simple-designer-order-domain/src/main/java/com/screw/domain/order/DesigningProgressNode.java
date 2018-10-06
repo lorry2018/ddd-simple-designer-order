@@ -54,6 +54,7 @@ public class DesigningProgressNode implements Entity<DesigningProgressNode> {
     public void confirmCompletion() {
         this.state = changeState(this, DesigningProgressNodeState.CONFIRM_COMPLETION);
         this.confirmCompletionTime = new Date();
+        this.completed = true;
     }
 
     @Override

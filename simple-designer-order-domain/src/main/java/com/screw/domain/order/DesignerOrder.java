@@ -83,7 +83,7 @@ public class DesignerOrder implements Entity<DesignerOrder> {
             DomainException.throwDomainException(DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE_CODE, DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE, this.id, this.state);
         }
 
-        if (Math.abs(amount - this.expectedAmount) < 0.0001) {
+        if (Math.abs(amount - this.expectedAmount) > 0.01) {
             DomainException.throwDomainException(DomainExceptionMessage.PAYMENT_NOT_MATCHED_CODE, DomainExceptionMessage.PAYMENT_NOT_MATCHED, this.id, this.expectedAmount, amount);
         }
 
@@ -103,15 +103,13 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     public void requestCompletionForProgressNode(DesigningProgressNodeType nodeType, String achievement) {
         this.assertChangeProgressNode();
 
-        DesigningProgressNode node = this.report.getNode(nodeType);
-        node.requestCompletion(achievement);
+        this.report.requestCompletionForProgressNode(nodeType, achievement);
     }
 
     public void confirmCompletionForProgressNode(DesigningProgressNodeType nodeType) {
         this.assertChangeProgressNode();
 
-        DesigningProgressNode node = this.report.getNode(nodeType);
-        node.confirmCompletion();
+        this.report.confirmCompletionForProgressNode(nodeType);
     }
 
     public RefundOrder refund(String cause) {

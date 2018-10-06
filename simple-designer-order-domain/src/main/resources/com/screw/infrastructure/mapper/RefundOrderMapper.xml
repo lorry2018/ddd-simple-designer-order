@@ -47,7 +47,7 @@
     </select>
 
     <insert id="create" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO refund_order(designer_order_id, cause, refund_amount, completed, createdTime, updatedTime)
+        INSERT INTO refund_order(designer_order_id, cause, refund_amount, completed, created_time, updated_time)
         VALUES (#{designerOrderId}, #{cause}, #{refundAmount}, 0, SYSDATE(), SYSDATE());
     </insert>
     <update id="update">

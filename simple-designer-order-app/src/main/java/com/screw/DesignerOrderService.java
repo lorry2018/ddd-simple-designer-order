@@ -6,6 +6,8 @@ import com.screw.domain.refund.RefundOrder;
 
 public interface DesignerOrderService {
     DesignerOrder selectByKey(int orderId);
+    RefundOrder selectRefundOrderByKey(int orderId);
+
     DesignerOrder createOrder(int customerId, int designerId);
     void measure(int orderId, float area);
     void quote(int orderId, float expectedAmount, int[] estimatedDaysList);

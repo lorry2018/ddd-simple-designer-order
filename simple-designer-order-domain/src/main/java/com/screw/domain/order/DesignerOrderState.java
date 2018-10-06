@@ -8,9 +8,9 @@ public enum  DesignerOrderState {
     REJECT_QUOTE(4, "拒绝报价"),
     PAID(5, "已付款"),
     REFUND(6, "已退款"),
-    ABORTED(9, "已终止"),
-    COMPLETION(11, "已完成"), // 当进度的所有节点都确定后，自动变更
-    FEEDBACK(12, "已评价");
+    ABORTED(7, "已终止"),
+    COMPLETION(8, "已完成"), // 当进度的所有节点都确定后，自动变更
+    FEEDBACK(9, "已评价");
 
     private int code;
     private String name;

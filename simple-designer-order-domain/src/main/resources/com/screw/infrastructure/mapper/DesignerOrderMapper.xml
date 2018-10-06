@@ -69,6 +69,7 @@
             designer_id = #{designerId},
             state = #{state.code},
             area = #{area},
+            estimated_days = #{estimatedDays},
             expected_amount = #{expectedAmount},
             actual_paid_amount = #{actualPaidAmount},
             abort_cause = #{abortCause},

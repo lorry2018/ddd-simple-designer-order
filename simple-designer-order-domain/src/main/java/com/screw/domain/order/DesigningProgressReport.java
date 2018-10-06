@@ -7,6 +7,7 @@ import com.screw.domain.ValueObject;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +51,13 @@ public class DesigningProgressReport implements ValueObject<DesigningProgressRep
 
     public void startup() {
         this.setStartupTime(new Date());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.startupTime);
+        cal.add(Calendar.DATE, this.estimatedCompletionDays);
+
+        this.setEstimatedCompletionTime(cal.getTime());
+
         this.startupFirstProgressNode();
     }
 
