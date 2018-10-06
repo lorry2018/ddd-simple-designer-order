@@ -101,6 +101,9 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     }
 
     public void requestCompletionForProgressNode(DesigningProgressNodeType nodeType, String achievement) {
+        Assert.notNull(nodeType, "The nodeType can not be null.");
+        Assert.hasText(achievement, "The achievement can not be empty.");
+
         this.assertChangeProgressNode();
 
         this.report.requestCompletionForProgressNode(nodeType, achievement);
@@ -130,6 +133,9 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     }
 
     public void feedback(int star, String description) {
+        Assert.isTrue(star > 0 && star <= 5, "The star must between 1 and 5.");
+        Assert.hasText(description, "The description can not be empty.");
+
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.FEEDBACK);
         this.feedbackStar = star;
         this.feedbackDescription = description;
