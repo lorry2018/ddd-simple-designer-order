@@ -115,6 +115,7 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     public RefundOrder refund(String cause) {
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REFUND);
 
+        // 如果第三阶段已经请求完成确定，则无法进行退款，此时抛出异常。
         DesigningProgressNode constructionDrawingDesignNode = this.report.getNode(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
         if (constructionDrawingDesignNode.getState() == DesigningProgressNodeState.REQUEST_COMPLETION ||
                 constructionDrawingDesignNode.getState() == DesigningProgressNodeState.CONFIRM_COMPLETION) {

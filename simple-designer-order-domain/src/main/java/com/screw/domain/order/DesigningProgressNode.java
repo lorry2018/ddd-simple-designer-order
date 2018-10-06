@@ -38,7 +38,7 @@ public class DesigningProgressNode implements Entity<DesigningProgressNode> {
     private boolean completed;
     private DesigningProgressNodeState state;
 
-    private String achievement; // 成果的URL或者内容
+    private String achievement; // 成果的URL或者内容，仅供测试，设计前三阶段实际成果为几个文件的合集
     private Date requestCompletionTime;
     private Date confirmCompletionTime;
 
