@@ -126,6 +126,7 @@ public class DesignerOrderServiceTest {
         refund((float)(2000 * 0.5));
         feedback();
     }
+
     @Test(expected =  DomainException.class)
     public void refundException() {
         create();
@@ -138,7 +139,6 @@ public class DesignerOrderServiceTest {
         updateProgressNodeForConstructionDrawing();
         refund(2000);
     }
-
 
     private void create() {
         DesignerOrder designerOrder = designerOrderService.createOrder(1, 1);
