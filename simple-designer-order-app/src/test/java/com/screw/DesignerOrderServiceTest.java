@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {AppConfiguration.class})
-@ActiveProfiles("dev")
 @EnableAutoConfiguration
 public class DesignerOrderServiceTest {
     @Autowired

@@ -16,7 +16,6 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {DomainConfiguration.class})
-@ActiveProfiles("dev")
 @EnableAutoConfiguration
 public class CustomerMapperTest {
     @Autowired
