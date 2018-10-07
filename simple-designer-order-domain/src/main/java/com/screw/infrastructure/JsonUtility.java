@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 
 public class JsonUtility {
     private JsonUtility() {}
@@ -21,10 +22,7 @@ public class JsonUtility {
 
         objectMapper = new ObjectMapper();
 
-        //objectMapper.setDateFormat(new SimpleDateFormat(FormatUtil.DATE_FORMAT_LONG));
-        //objectMapper.disable(DeserializationConfig.FAIL_ON_UNKNOWN_PROPERTIES);
-        //objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-        //objectMapper.setFilters(new SimpleFilterProvider().setFailOnUnknownId(false));
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
     }
 
     public static String stringify(Object object) {
