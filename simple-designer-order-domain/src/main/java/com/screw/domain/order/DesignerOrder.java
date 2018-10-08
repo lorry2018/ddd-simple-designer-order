@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.util.Assert;
 
 import java.util.Date;
+import java.util.function.Consumer;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -116,14 +117,14 @@ public class DesignerOrder implements Entity<DesignerOrder> {
     }
 
     public RefundOrder refund(String cause) {
-        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REFUND);
-
         // 如果第三阶段已经请求完成确定，则无法进行退款，此时抛出异常。
         DesigningProgressNode constructionDrawingDesignNode = this.report.getNode(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
         if (constructionDrawingDesignNode.getState() == DesigningProgressNodeState.REQUEST_COMPLETION ||
                 constructionDrawingDesignNode.getState() == DesigningProgressNodeState.CONFIRM_COMPLETION) {
             DomainException.throwDomainException(DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS_CODE, DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS, this.id);
         }
+
+        this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REFUND);
 
         return RefundOrderFactory.newRefundOrder(this, cause);
     }
@@ -139,10 +140,21 @@ public class DesignerOrder implements Entity<DesignerOrder> {
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.FEEDBACK);
         this.feedbackStar = star;
         this.feedbackDescription = description;
+
     }
 
     @Override
     public boolean sameIdentityAs(DesignerOrder other) {
         return this.equals(other);
+    }
+
+    private void changeStateWithAction(Consumer<DesignerOrder> action, DesignerOrderState nextState) {
+        DesignerOrderState currentState = this.state;
+        try {
+            action.accept(this);
+            this.state = DesignerOrderWorkflowService.changeState(this.id, this.state, nextState);
+        } catch (Exception ex) {
+            this.state = currentState;
+        }
     }
 }
