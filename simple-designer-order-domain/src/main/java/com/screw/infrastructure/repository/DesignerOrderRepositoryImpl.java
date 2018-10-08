@@ -72,12 +72,12 @@ public class DesignerOrderRepositoryImpl implements DesignerOrderRepository {
     }
 
     private void buildConnection(DesignerOrder order) {
-        if (null == order.getReport()) {
+        if (null == order.getProgressReport()) {
             return;
         }
-        order.getReport().setOrder(order);
-        for (DesigningProgressNode node : order.getReport().getNodes()) {
-            node.setReport(order.getReport());
+        order.getProgressReport().setOrder(order);
+        for (DesigningProgressNode node : order.getProgressReport().getNodes()) {
+            node.setReport(order.getProgressReport());
         }
     }
 }

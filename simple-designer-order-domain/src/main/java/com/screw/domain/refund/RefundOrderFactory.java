@@ -20,7 +20,7 @@ public class RefundOrderFactory {
     }
 
     public static float computeRefundAmount(DesignerOrder order) {
-        DesigningProgressReport report = order.getReport();
+        DesigningProgressReport report = order.getProgressReport();
         List<DesigningProgressNode> nodes = report.getNodes();
 
         // 平面图未完成

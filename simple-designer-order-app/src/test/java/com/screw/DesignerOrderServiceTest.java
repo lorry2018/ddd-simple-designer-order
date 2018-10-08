@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -165,7 +164,7 @@ public class DesignerOrderServiceTest {
         assertEquals(2000, designerOrder.getExpectedAmount(), 0.01);
         assertEquals(10, designerOrder.getEstimatedDays());
 
-        DesigningProgressReport report = designerOrder.getReport();
+        DesigningProgressReport report = designerOrder.getProgressReport();
 
         assertEquals(designerOrder.getId(), report.getOrder().getId());
         assertEquals(10, report.getEstimatedCompletionDays());
@@ -198,7 +197,7 @@ public class DesignerOrderServiceTest {
         assertEquals(DesignerOrderState.PAID, designerOrder.getState());
         assertEquals(2000, designerOrder.getActualPaidAmount(), 0.01);
 
-        DesigningProgressReport report = designerOrder.getReport();
+        DesigningProgressReport report = designerOrder.getProgressReport();
 
         assertEquals(designerOrder.getId(), report.getOrder().getId());
         assertNotNull(report.getStartupTime());
@@ -218,14 +217,14 @@ public class DesignerOrderServiceTest {
         designerOrderService.requestCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.FLOORPLAN_DESIGN, "url://achievementUrl.");
 
         DesignerOrder designerOrder = getDesignerOrder();
-        DesigningProgressReport report = designerOrder.getReport();
+        DesigningProgressReport report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.FLOORPLAN_DESIGN, report.getNodes().get(0).getNodeType());
         assertEquals(DesigningProgressNodeState.REQUEST_COMPLETION, report.getNodes().get(0).getState());
 
         designerOrderService.confirmCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.FLOORPLAN_DESIGN);
 
         designerOrder = getDesignerOrder();
-        report = designerOrder.getReport();
+        report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.FLOORPLAN_DESIGN, report.getNodes().get(0).getNodeType());
         assertEquals(DesigningProgressNodeState.CONFIRM_COMPLETION, report.getNodes().get(0).getState());
         assertEquals(DesigningProgressNodeType.SKETCH_DESIGN, report.getNodes().get(1).getNodeType());
@@ -236,14 +235,14 @@ public class DesignerOrderServiceTest {
         designerOrderService.requestCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.SKETCH_DESIGN, "url://achievementUrl.");
 
         DesignerOrder designerOrder = getDesignerOrder();
-        DesigningProgressReport report = designerOrder.getReport();
+        DesigningProgressReport report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.SKETCH_DESIGN, report.getNodes().get(1).getNodeType());
         assertEquals(DesigningProgressNodeState.REQUEST_COMPLETION, report.getNodes().get(1).getState());
 
         designerOrderService.confirmCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.SKETCH_DESIGN);
 
         designerOrder = getDesignerOrder();
-        report = designerOrder.getReport();
+        report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.SKETCH_DESIGN, report.getNodes().get(1).getNodeType());
         assertEquals(DesigningProgressNodeState.CONFIRM_COMPLETION, report.getNodes().get(1).getState());
         assertEquals(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN, report.getNodes().get(2).getNodeType());
@@ -254,14 +253,14 @@ public class DesignerOrderServiceTest {
         designerOrderService.requestCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN, "url://achievementUrl.");
 
         DesignerOrder designerOrder = getDesignerOrder();
-        DesigningProgressReport report = designerOrder.getReport();
+        DesigningProgressReport report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN, report.getNodes().get(2).getNodeType());
         assertEquals(DesigningProgressNodeState.REQUEST_COMPLETION, report.getNodes().get(2).getState());
 
         designerOrderService.confirmCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
 
         designerOrder = getDesignerOrder();
-        report = designerOrder.getReport();
+        report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN, report.getNodes().get(2).getNodeType());
         assertEquals(DesigningProgressNodeState.CONFIRM_COMPLETION, report.getNodes().get(2).getState());
         assertEquals(DesigningProgressNodeType.DISCLOSURE, report.getNodes().get(3).getNodeType());
@@ -272,14 +271,14 @@ public class DesignerOrderServiceTest {
         designerOrderService.requestCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.DISCLOSURE, "url://achievementUrl.");
 
         DesignerOrder designerOrder = getDesignerOrder();
-        DesigningProgressReport report = designerOrder.getReport();
+        DesigningProgressReport report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.DISCLOSURE, report.getNodes().get(3).getNodeType());
         assertEquals(DesigningProgressNodeState.REQUEST_COMPLETION, report.getNodes().get(3).getState());
 
         designerOrderService.confirmCompletionForProgressNode(designerOrderId, DesigningProgressNodeType.DISCLOSURE);
 
         designerOrder = getDesignerOrder();
-        report = designerOrder.getReport();
+        report = designerOrder.getProgressReport();
         assertEquals(DesigningProgressNodeType.DISCLOSURE, report.getNodes().get(3).getNodeType());
         assertEquals(DesigningProgressNodeState.CONFIRM_COMPLETION, report.getNodes().get(3).getState());
 

@@ -12,7 +12,7 @@
         <result column="abort_cause" property="abortCause" />
         <result column="feedback_star" property="feedbackStar" />
         <result column="feedback_description" property="feedbackDescription" />
-        <result column="report" property="report" typeHandler="com.screw.infrastructure.mapper.DesigningProgressReportTypeHandler" />
+        <result column="progress_report" property="progressReport" typeHandler="com.screw.infrastructure.mapper.DesigningProgressReportTypeHandler" />
         <result column="created_time" property="createdTime" />
         <result column="updated_time" property="updatedTime" />
     </resultMap>
@@ -29,7 +29,7 @@
             abort_cause,
             feedback_star,
             feedback_description,
-            report,
+            progress_report,
             created_time,
             updated_time
         FROM designer_order
@@ -75,7 +75,7 @@
             abort_cause = #{abortCause},
             feedback_star = #{feedbackStar},
             feedback_description = #{feedbackDescription},
-            report = #{report, jdbcType=VARCHAR, typeHandler=com.screw.infrastructure.mapper.DesigningProgressReportTypeHandler},
+            progress_report = #{progressReport, jdbcType=VARCHAR, typeHandler=com.screw.infrastructure.mapper.DesigningProgressReportTypeHandler},
             updated_time = SYSDATE()
         WHERE id = #{id} and updated_time = #{updatedTime}
     </update>

@@ -23,7 +23,7 @@ public class DesignerOrder implements Entity<DesignerOrder> {
 
     private float expectedAmount;
     private int estimatedDays;
-    private DesigningProgressReport report;
+    private DesigningProgressReport progressReport;
 
     private String abortCause;
 
@@ -48,8 +48,8 @@ public class DesignerOrder implements Entity<DesignerOrder> {
 
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.QUOTED);
         this.expectedAmount = amount;
-        this.report = DesigningProgressReportFactory.newReport(this, estimatedDaysList);
-        this.estimatedDays = this.report.getEstimatedCompletionDays();
+        this.progressReport = DesigningProgressReportFactory.newReport(this, estimatedDaysList);
+        this.estimatedDays = this.progressReport.getEstimatedCompletionDays();
     }
 
     private void assertEstimatedDaysList(int[] estimatedDaysList) {
@@ -92,41 +92,44 @@ public class DesignerOrder implements Entity<DesignerOrder> {
         this.actualPaidAmount = amount;
 
         // 付款完成后，自动启动进度跟踪
-        this.report.startup();
-    }
-
-    private void assertChangeProgressNode() {
-        if (this.state != DesignerOrderState.PAID) {
-            DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.id, this.state);
-        }
+        this.progressReport.startup();
     }
 
     public void requestCompletionForProgressNode(DesigningProgressNodeType nodeType, String achievement) {
         Assert.notNull(nodeType, "The nodeType can not be null.");
         Assert.hasText(achievement, "The achievement can not be empty.");
 
-        this.assertChangeProgressNode();
+        this.assertCanUpdateProgress();
 
-        this.report.requestCompletionForProgressNode(nodeType, achievement);
+        this.progressReport.requestCompletionForProgressNode(nodeType, achievement);
     }
 
     public void confirmCompletionForProgressNode(DesigningProgressNodeType nodeType) {
-        this.assertChangeProgressNode();
+        this.assertCanUpdateProgress();
 
-        this.report.confirmCompletionForProgressNode(nodeType);
+        this.progressReport.confirmCompletionForProgressNode(nodeType);
+    }
+
+    private void assertCanUpdateProgress() {
+        if (this.state != DesignerOrderState.PAID) {
+            DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.id, this.state);
+        }
     }
 
     public RefundOrder refund(String cause) {
-        // 如果第三阶段已经请求完成确定，则无法进行退款，此时抛出异常。
-        DesigningProgressNode constructionDrawingDesignNode = this.report.getNode(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
-        if (constructionDrawingDesignNode.getState() == DesigningProgressNodeState.REQUEST_COMPLETION ||
-                constructionDrawingDesignNode.getState() == DesigningProgressNodeState.CONFIRM_COMPLETION) {
-            DomainException.throwDomainException(DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS_CODE, DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS, this.id);
-        }
+        this.assertCanRefund();
 
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.REFUND);
 
         return RefundOrderFactory.newRefundOrder(this, cause);
+    }
+
+    private void assertCanRefund() {
+        DesigningProgressNode constructionDrawingDesignNode = this.progressReport.getNode(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
+        if (constructionDrawingDesignNode.getState() == DesigningProgressNodeState.REQUEST_COMPLETION ||
+                constructionDrawingDesignNode.getState() == DesigningProgressNodeState.CONFIRM_COMPLETION) {
+            DomainException.throwDomainException(DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS_CODE, DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS, this.id);
+        }
     }
 
     public void complete() {

@@ -34,7 +34,7 @@ CREATE TABLE `designer_order` (
   `abort_cause` varchar(200) DEFAULT NULL,
   `feedback_star` int(11) DEFAULT NULL,
   `feedback_description` varchar(200) DEFAULT NULL,
-  `report` varchar(8000) DEFAULT NULL,
+  `progress_report` varchar(8000) DEFAULT NULL,
   `created_time` datetime DEFAULT now(),
   `updated_time` datetime DEFAULT now(),
   PRIMARY KEY (`id`),
