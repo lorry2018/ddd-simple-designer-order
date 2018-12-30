@@ -1,6 +1,6 @@
 package com.screw.domain.order;
 
-import com.screw.domain.DomainException;
+import com.screw.BusinessException;
 import com.screw.domain.DomainExceptionMessage;
 import org.springframework.util.Assert;
 
@@ -50,7 +50,7 @@ public class DesignerOrderWorkflowService {
 
     public static DesignerOrderState changeState(long orderId, DesignerOrderState state, DesignerOrderState nextState) {
         if (!canChangeState(state, nextState)) {
-            DomainException.throwDomainException(DomainExceptionMessage.STATE_CHANGE_ILLEGAL_CODE, DomainExceptionMessage.STATE_CHANGE_ILLEGAL, orderId, state, nextState);
+            BusinessException.throwException(DomainExceptionMessage.STATE_CHANGE_ILLEGAL_CODE, DomainExceptionMessage.STATE_CHANGE_ILLEGAL, orderId, state, nextState);
         }
 
         return nextState;

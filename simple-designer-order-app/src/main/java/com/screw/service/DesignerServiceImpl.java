@@ -1,6 +1,8 @@
 package com.screw.service;
 
+import com.screw.AppExceptionMessage;
 import com.screw.DesignerService;
+import com.screw.BusinessException;
 import com.screw.domain.designer.Designer;
 import com.screw.domain.designer.DesignerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ public class DesignerServiceImpl implements DesignerService {
     public void enable(int designerId) {
         Designer designer = designerRepository.selectByKey(designerId);
         if (designer == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_NOT_EXIST, designerId);
         }
 
         designer.enable();
@@ -29,7 +31,7 @@ public class DesignerServiceImpl implements DesignerService {
     public void disable(int designerId) {
         Designer designer = designerRepository.selectByKey(designerId);
         if (designer == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_NOT_EXIST, designerId);
         }
 
         designer.disable();
@@ -41,7 +43,7 @@ public class DesignerServiceImpl implements DesignerService {
     public void changePrice(int designerId, float priceByDay) {
         Designer designer = designerRepository.selectByKey(designerId);
         if (designer == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_NOT_EXIST, designerId);
         }
 
         designer.changePrice(priceByDay);

@@ -1,6 +1,5 @@
 package com.screw;
 
-import com.screw.domain.DomainException;
 import com.screw.domain.order.*;
 import com.screw.domain.refund.RefundOrder;
 import org.junit.Test;
@@ -79,7 +78,7 @@ public class DesignerOrderServiceTest {
         abort();
     }
 
-    @Test(expected = DomainException.class)
+    @Test(expected = BusinessException.class)
     public void abortWorkflowException() {
         create();
         measure();
@@ -125,7 +124,7 @@ public class DesignerOrderServiceTest {
         feedback();
     }
 
-    @Test(expected =  DomainException.class)
+    @Test(expected =  BusinessException.class)
     public void refundException() {
         create();
         measure();

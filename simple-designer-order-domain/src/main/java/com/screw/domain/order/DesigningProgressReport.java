@@ -1,7 +1,7 @@
 package com.screw.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.screw.domain.DomainException;
+import com.screw.BusinessException;
 import com.screw.domain.DomainExceptionMessage;
 import com.screw.domain.ValueObject;
 import lombok.Data;
@@ -31,20 +31,20 @@ public class DesigningProgressReport implements ValueObject<DesigningProgressRep
             }
         }
 
-        DomainException.throwDomainException(DomainExceptionMessage.FAILED_TO_GET_PROGRESS_NODE_CODE, DomainExceptionMessage.FAILED_TO_GET_PROGRESS_NODE, nodeType.getName());
+        BusinessException.throwException(DomainExceptionMessage.FAILED_TO_GET_PROGRESS_NODE_CODE, DomainExceptionMessage.FAILED_TO_GET_PROGRESS_NODE, nodeType.getName());
         return null;
     }
 
     private void assertChangeProgressNode(DesigningProgressNodeType nodeType) {
         if (this.getOrder().getState() != DesignerOrderState.PAID) {
-            DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.getOrder().getId(), this.getOrder().getState());
+            BusinessException.throwException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.getOrder().getId(), this.getOrder().getState());
         }
 
         DesigningProgressNode node = this.getNode(nodeType);
         int currentNodeIndex = nodes.indexOf(node);
         for (currentNodeIndex --; currentNodeIndex >=0; currentNodeIndex --) {
             if (!this.nodes.get(currentNodeIndex).isCompleted()) {
-                DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.getOrder().getState());
+                BusinessException.throwException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.getOrder().getState());
             }
         }
     }

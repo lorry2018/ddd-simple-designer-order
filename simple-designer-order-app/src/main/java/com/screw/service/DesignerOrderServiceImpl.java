@@ -1,6 +1,8 @@
 package com.screw.service;
 
+import com.screw.AppExceptionMessage;
 import com.screw.DesignerOrderService;
+import com.screw.BusinessException;
 import com.screw.domain.order.*;
 import com.screw.domain.refund.RefundOrder;
 import com.screw.domain.refund.RefundOrderRepository;
@@ -29,7 +31,9 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     @Override
     public DesignerOrder createOrder(int customerId, int designerId) {
         DesignerOrder order = DesignerOrderFactory.createOrder(customerId, designerId);
+
         designerOrderRepository.create(order);
+
         return designerOrderRepository.selectByKey(order.getId());
     }
 
@@ -37,7 +41,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void measure(int orderId, float area) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.measure(area);
@@ -48,7 +52,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void quote(int orderId, float expectedAmount, int[] estimatedDaysList) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.quote(expectedAmount, estimatedDaysList);
@@ -59,7 +63,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void acceptQuote(int orderId) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.acceptQuote();
@@ -70,7 +74,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void rejectQuote(int orderId) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.rejectQuote();
@@ -81,7 +85,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void pay(int orderId, float amount) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.pay(amount);
@@ -92,7 +96,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void abort(int orderId, String cause) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.abort(cause);
@@ -104,7 +108,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void requestCompletionForProgressNode(int orderId, DesigningProgressNodeType nodeType, String achievement) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.requestCompletionForProgressNode(nodeType, achievement);
@@ -116,7 +120,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void confirmCompletionForProgressNode(int orderId, DesigningProgressNodeType nodeType) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.confirmCompletionForProgressNode(nodeType);
@@ -128,12 +132,13 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public RefundOrder refund(int orderId, String cause) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return null;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         RefundOrder refundOrder = order.refund(cause);
 
         designerOrderRepository.update(order);
+
         refundOrderRepository.create(refundOrder);
 
         return refundOrderRepository.selectByKey(refundOrder.getId());
@@ -143,7 +148,7 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void feedback(int orderId, int star, String description) {
         DesignerOrder order = designerOrderRepository.selectByKey(orderId);
         if (order == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST_CODE, AppExceptionMessage.DESIGNER_ORDER_NOT_EXIST, orderId);
         }
 
         order.feedback(star, description);
@@ -155,9 +160,11 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
     public void completeRefundOrder(int refundOrderId) {
         RefundOrder refundOrder = refundOrderRepository.selectByKey(refundOrderId);
         if (refundOrder == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.REFUND_ORDER_NOT_EXIST_CODE, AppExceptionMessage.REFUND_ORDER_NOT_EXIST, refundOrderId);
         }
+
         refundOrder.complete();
+
         refundOrderRepository.update(refundOrder);
     }
 }

@@ -1,7 +1,7 @@
 package com.screw.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.screw.domain.DomainException;
+import com.screw.BusinessException;
 import com.screw.domain.DomainExceptionMessage;
 import com.screw.domain.Entity;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class DesigningProgressNode implements Entity<DesigningProgressNode> {
             return nextState;
         }
 
-        DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, node.getReport().getOrder().getId(), node.nodeName, node.state, nextState);
+        BusinessException.throwException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, node.getReport().getOrder().getId(), node.nodeName, node.state, nextState);
         return null;
     }
 

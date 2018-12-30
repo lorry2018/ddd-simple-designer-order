@@ -1,6 +1,6 @@
 package com.screw.domain.order;
 
-import com.screw.domain.DomainException;
+import com.screw.BusinessException;
 import com.screw.domain.DomainExceptionMessage;
 import com.screw.domain.Entity;
 import com.screw.domain.refund.RefundOrder;
@@ -81,11 +81,11 @@ public class DesignerOrder implements Entity<DesignerOrder> {
         Assert.isTrue(amount > 0, "The amount must be bigger than 0.");
 
         if (!DesignerOrderWorkflowService.canChangeState(state, DesignerOrderState.PAID)) {
-            DomainException.throwDomainException(DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE_CODE, DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE, this.id, this.state);
+            BusinessException.throwException(DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE_CODE, DomainExceptionMessage.PAYMENT_NOT_IN_READY_STATE, this.id, this.state);
         }
 
         if (Math.abs(amount - this.expectedAmount) > 0.01) {
-            DomainException.throwDomainException(DomainExceptionMessage.PAYMENT_NOT_MATCHED_CODE, DomainExceptionMessage.PAYMENT_NOT_MATCHED, this.id, this.expectedAmount, amount);
+            BusinessException.throwException(DomainExceptionMessage.PAYMENT_NOT_MATCHED_CODE, DomainExceptionMessage.PAYMENT_NOT_MATCHED, this.id, this.expectedAmount, amount);
         }
 
         this.state = DesignerOrderWorkflowService.changeState(this.id, state, DesignerOrderState.PAID);
@@ -112,7 +112,7 @@ public class DesignerOrder implements Entity<DesignerOrder> {
 
     private void assertCanUpdateProgress() {
         if (this.state != DesignerOrderState.PAID) {
-            DomainException.throwDomainException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.id, this.state);
+            BusinessException.throwException(DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE_CODE, DomainExceptionMessage.PROGRESS_UPDATE_FAILED_FOR_ERROR_STATE, this.id, this.state);
         }
     }
 
@@ -128,7 +128,7 @@ public class DesignerOrder implements Entity<DesignerOrder> {
         DesigningProgressNode constructionDrawingDesignNode = this.progressReport.getNode(DesigningProgressNodeType.CONSTRUCTION_DRAWING_DESIGN);
         if (constructionDrawingDesignNode.getState() == DesigningProgressNodeState.REQUEST_COMPLETION ||
                 constructionDrawingDesignNode.getState() == DesigningProgressNodeState.CONFIRM_COMPLETION) {
-            DomainException.throwDomainException(DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS_CODE, DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS, this.id);
+            BusinessException.throwException(DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS_CODE, DomainExceptionMessage.FAILED_TO_REFUND_FOR_PROGRESS, this.id);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.screw.service;
 
+import com.screw.AppExceptionMessage;
 import com.screw.CustomerService;
+import com.screw.BusinessException;
 import com.screw.domain.customer.Customer;
 import com.screw.domain.customer.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean canCreateDesignerOrder(int customerId) {
         Customer customer = customerRepository.selectByKey(customerId);
         if (customer == null) {
-            return false;
+            BusinessException.throwException(AppExceptionMessage.CUSTOMER_NOT_EXIST_CODE, AppExceptionMessage.CUSTOMER_NOT_EXIST, customerId);
         }
 
         return customer.canCreateDesignerOrder();
@@ -27,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void enable(int customerId) {
         Customer customer = customerRepository.selectByKey(customerId);
         if (customer == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.CUSTOMER_NOT_EXIST_CODE, AppExceptionMessage.CUSTOMER_NOT_EXIST, customerId);
         }
 
         customer.enable();
@@ -39,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void disable(int customerId) {
         Customer customer = customerRepository.selectByKey(customerId);
         if (customer == null) {
-            return;
+            BusinessException.throwException(AppExceptionMessage.CUSTOMER_NOT_EXIST_CODE, AppExceptionMessage.CUSTOMER_NOT_EXIST, customerId);
         }
 
         customer.disable();
