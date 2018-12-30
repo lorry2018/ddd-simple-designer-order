@@ -1,4 +1,4 @@
-package com.screw;
+package com.screw.service;
 
 public interface DesignerService {
     void enable(int designerId);

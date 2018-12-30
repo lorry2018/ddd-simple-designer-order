@@ -1,6 +1,6 @@
 package com.screw.web.controller;
 
-import com.screw.DesignerOrderService;
+import com.screw.service.DesignerOrderService;
 import com.screw.domain.order.DesignerOrder;
 import com.screw.domain.order.DesigningProgressNodeType;
 import org.springframework.beans.factory.annotation.Autowired;

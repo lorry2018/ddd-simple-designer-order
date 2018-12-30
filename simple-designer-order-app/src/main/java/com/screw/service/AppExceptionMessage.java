@@ -1,4 +1,4 @@
-package com.screw;
+package com.screw.service;
 
 public class AppExceptionMessage {
     public static int APP_EXCEPTION_CODE = 20000;

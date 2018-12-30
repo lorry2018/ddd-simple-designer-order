@@ -1,4 +1,4 @@
-package com.screw;
+package com.screw.service;
 
 import com.screw.domain.order.DesignerOrder;
 import com.screw.domain.order.DesigningProgressNodeType;
