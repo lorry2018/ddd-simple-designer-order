@@ -32,7 +32,7 @@
         <aspect.version>1.8.9</aspect.version>
 
         <mysql.version>5.1.38</mysql.version>
-        <h2.db.version>1.4.187</h2.db.version>
+        <h2.db.version>2.1.210</h2.db.version>
 
         <sl4j.version>1.7.25</sl4j.version>
 
